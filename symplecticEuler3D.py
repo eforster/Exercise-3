@@ -126,7 +126,8 @@ def main():
 
         # Append information to data lists
         time_list.append(time)
-        pos_list.append(p1_to_p2)
+        pos1_list.append(p1.pos)
+        pos2_list.append(p2.pos)
         energy_list.append(energy)
 
     # Post-simulation:
@@ -134,10 +135,11 @@ def main():
     outfile.close()
 
     # Plot particle trajectory to screen
-    pyplot.title('Symplectic Euler: |P1 to P2| vs Time')
+    pyplot.title('Symplectic Euler: Position vs Time')
     pyplot.xlabel('Time')
     pyplot.ylabel('Position')
-    pyplot.plot(time_list, pos_list)
+    pyplot.plot(time_list, pos1_list)
+    pyplot.plot(time_list, pos2_list)
     pyplot.show()
 
     # Plot particle energy to screen

@@ -88,30 +88,36 @@ def main():
     #  mass      m = 1.0
     p1 = Particle3D('Oxygen', 16, np.array([0.65661, 0, 0]), np.array([0.05, 0, 0]))
     p2 = Particle3D('Oxygen', 16, np.array([-0.65661, 0, 0]), np.array([-0.05, 0, 0]))
+    p1_to_p2 = np.linalg.norm(p2.pos - p1.pos)
 
 
     # Write out initial conditions
     energy = p1.kinetic_e() + p2.kinetic_e() + morse_potential(p1, p2, r_e, d_e, alpha)
-    outfile.write("{0:f} {1:f} {2:12.8f}\n".format(time, p1.pos, energy))
+    outfile.write("{0:f} {1:f} {2:12.8f}\n".format(time, p1_to_p2, energy))
 
     # Get initial force
     force = morse_force(p1, p2, r_e, d_e, alpha)
 
     # Initialise data lists for plotting later
     time_list = [time]
-    pos_list = [p1.pos]
+    pos1_list = [p1.pos]
+    pos2_list = [p2.pos]
+    pos_list = [np.linalg.norm(p2.pos - p1.pos)]
     energy_list = [energy]
 
     # Start the time integration loop
     for i in range(numstep):
         # Update particle position
         p1.update_pos_2nd(dt, force)
+        p2.update_pos_2nd(dt, force)
+        p1_to_p2 = np.linalg.norm(p2.pos - p1.pos)
         
         # Update force
         force_new = morse_force(p1, p2, r_e, d_e, alpha)
         # Update particle velocity by averaging
         # current and new forces
-        p1.update_vel(dt, 0.5*(force+force_new))
+        p1.update_vel(dt, 0.5*(force + force_new))
+        p2.update_vel(dt, 0.5*(force - force_new))
         
         # Re-define force value
         force = force_new
@@ -121,11 +127,12 @@ def main():
         
         # Output particle information
         energy = p1.kinetic_e() + p2.kinetic_e() + morse_potential(p1, p2, r_e, d_e, alpha)
-        outfile.write("{0:f} {1:f} {2:12.8f}\n".format(time, p1.pos, energy))
+        outfile.write("{0:f} {1:f} {2:12.8f}\n".format(time, p1_to_p2, energy))
 
         # Append information to data lists
         time_list.append(time)
-        pos_list.append(p1.pos)
+        pos1_list.append(p1.pos)
+        pos2_list.append(p2.pos)
         energy_list.append(energy)
     
 
@@ -134,10 +141,11 @@ def main():
     outfile.close()
 
     # Plot particle trajectory to screen
-    pyplot.title('Velocity Verlet: |P1 to P2| vs Time')
+    pyplot.title('Velocity Verlet: Position vs Time')
     pyplot.xlabel('Time')
     pyplot.ylabel('Position')
-    pyplot.plot(time_list, pos_list)
+    pyplot.plot(time_list, pos1_list)
+    pyplot.plot(time_list, pos2_list)
     pyplot.show()
 
     # Plot particle energy to screen
