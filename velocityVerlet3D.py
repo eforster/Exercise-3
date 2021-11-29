@@ -34,9 +34,10 @@ def morse_force(particle, different_particle, r_e, d_e, alpha):
 
     :return: force acting on particle as Numpy array
     """
-    r12 = different_particle.pos - particle.pos
-    r12_hat = r12 / np.linalg.norm(r12)
-    force = 2 * alpha * d_e * (1 - math.exp(-alpha(r12 - r_e))) * math.exp(-alpha(r12 - r_e)) * r12_hat
+    r12 = np.array([different_particle.pos]) - np.array([particle.pos])
+    mag_r12 = np.linalg.norm(r12)
+    r12_hat = r12 / mag_r12
+    force = 2 * alpha * d_e * (1 - math.exp(-alpha(mag_r12 - r_e))) * math.exp(-alpha(mag_r12 - r_e)) * r12_hat
     return force
 
 
@@ -54,9 +55,11 @@ def morse_potential(particle, different_particle, r_e, d_e, alpha):
 
     :return: Morse Potential of particle as float
     """
-    r12 = different_particle.pos - particle.pos
-    potential = d_e * (((1 - math.exp(-alpha(r12 - r_e))) ** 2) - 1)
+    r12 = np.array([different_particle.pos]) - np.array([particle.pos])
+    mag_r12 = np.linalg.norm(r12)
+    potential = d_e * (((1 - math.exp(-alpha(mag_r12 - r_e))) ** 2) - 1)
     return potential
+
 
 
 # Begin main code
