@@ -18,7 +18,6 @@ import numpy as np
 import matplotlib.pyplot as pyplot
 from particle3D import Particle3D
 
-
 def morse_force(particle, different_particle, r_e, d_e, alpha):
     """
     Method to return the force on a particle
@@ -34,10 +33,10 @@ def morse_force(particle, different_particle, r_e, d_e, alpha):
 
     :return: force acting on particle as Numpy array
     """
-    r12 = np.array([different_particle.pos]) - np.array([particle.pos])
+    r12 = different_particle.pos - particle.pos
     mag_r12 = np.linalg.norm(r12)
     r12_hat = r12 / mag_r12
-    force = 2 * alpha * d_e * (1 - math.exp(-alpha(mag_r12 - r_e))) * math.exp(-alpha(mag_r12 - r_e)) * r12_hat
+    force = 2 * alpha * d_e * (1 - math.exp(-alpha * (mag_r12 - r_e))) * math.exp(-alpha * (mag_r12 - r_e)) * r12_hat
     return force
 
 
@@ -55,9 +54,9 @@ def morse_potential(particle, different_particle, r_e, d_e, alpha):
 
     :return: Morse Potential of particle as float
     """
-    r12 = np.array([different_particle.pos]) - np.array([particle.pos])
+    r12 = different_particle.pos - particle.pos
     mag_r12 = np.linalg.norm(r12)
-    potential = d_e * (((1 - math.exp(-alpha(mag_r12 - r_e))) ** 2) - 1)
+    potential = d_e * (((1 - math.exp(-alpha * (mag_r12 - r_e))) ** 2) - 1)
     return potential
 
 
@@ -92,7 +91,7 @@ def main():
 
 
     # Write out initial conditions
-    energy = p1.kinetic_e() + morse_potential(p1, p2, r_e, d_e, alpha)
+    energy = p1.kinetic_e() + p2.kinetic_e() + morse_potential(p1, p2, r_e, d_e, alpha)
     outfile.write("{0:f} {1:f} {2:12.8f}\n".format(time, p1.pos, energy))
 
     # Get initial force
@@ -121,7 +120,7 @@ def main():
         time += dt
         
         # Output particle information
-        energy = p1.kinetic_e() + morse_potential(p1, p2, r_e, d_e, alpha)
+        energy = p1.kinetic_e() + p2.kinetic_e() + morse_potential(p1, p2, r_e, d_e, alpha)
         outfile.write("{0:f} {1:f} {2:12.8f}\n".format(time, p1.pos, energy))
 
         # Append information to data lists
