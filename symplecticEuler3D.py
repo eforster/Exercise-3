@@ -35,7 +35,6 @@ def morse_force(particle, different_particle, r_e, alpha, d_e):
     """
     r12 = different_particle.pos - particle.pos
     r12_hat = r12 / np.linalg.norm(r12)
-
     force = 2 * alpha * d_e * (1 - math.exp(-alpha(r12 - r_e))) * math.exp(-alpha(r12 - r_e)) * r12_hat
     return force
 
@@ -55,7 +54,6 @@ def morse_potential(particle, different_particle, r_e, alpha, d_e):
     :return: Morse Potential of particle as float
     """
     r12 = different_particle.pos - particle.pos
-
     potential = d_e * (((1 - math.exp(-alpha(r12 - r_e))) ** 2) - 1)
     return potential
 
