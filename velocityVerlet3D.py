@@ -87,8 +87,8 @@ def main():
     #  position x0 = 0.0
     #  velocity v0 = 1.0
     #  mass      m = 1.0
-    p1 = Particle3D('Oxygen', 16, [0.65661, 0, 0], [0.05, 0, 0])
-    p2 = Particle3D('Oxygen', 16, [-0.65661, 0, 0], [-0.05, 0, 0])
+    p1 = Particle3D('Oxygen', 16, np.array([0.65661, 0, 0]), np.array([0.05, 0, 0]))
+    p2 = Particle3D('Oxygen', 16, np.array([-0.65661, 0, 0]), np.array([-0.05, 0, 0]))
 
 
     # Write out initial conditions
@@ -135,14 +135,14 @@ def main():
     outfile.close()
 
     # Plot particle trajectory to screen
-    pyplot.title('Velocity Verlet: position vs time')
+    pyplot.title('Velocity Verlet: |P1 to P2| vs Time')
     pyplot.xlabel('Time')
     pyplot.ylabel('Position')
     pyplot.plot(time_list, pos_list)
     pyplot.show()
 
     # Plot particle energy to screen
-    pyplot.title('Velocity Verlet: total energy vs time')
+    pyplot.title('Velocity Verlet: Total energy vs Time')
     pyplot.xlabel('Time')
     pyplot.ylabel('Energy')
     pyplot.plot(time_list, energy_list)
