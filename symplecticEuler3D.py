@@ -11,7 +11,6 @@ a and b are hard-coded in the main() method
 and passed to the functions that
 calculate force and potential energy.
 """
-# help
 
 import sys
 import math
@@ -20,34 +19,44 @@ import matplotlib.pyplot as pyplot
 from particle3D import Particle3D
 
 
-def force_dw(particle, a, b):
+def morse_force(particle, different_particle, r_e, alpha, d_e):
     """
     Method to return the force on a particle
-    in a double well potential.
+    in a double well potential using Morse Potential.
     Force is given by
-    F(x) = -dV/dx = -4*a*x^3 + 2*b*x
+    F(r1, r2) = 2 * alpha * d_e * (1 - exp(-alpha(r12 - r_e))) * exp(-alpha(r12 - r_e)) * r12_hat
 
-    :param particle: Particle1D instance
-    :param a: parameter a from potential
-    :param b: parameter b from potential
+    :param particle: Particle3D instance
+    :param different_particle: Particle3D instance
+    :param r_e: parameter r_e, controls position of the potential minimum
+    :param alpha: parameter alpha, controls depth of the potential minimum
+    :param d_e: parameter d_e, controls curvature of the potential minimum
     :return: force acting on particle as Numpy array
     """
-    force = -4 * a * particle.position ** 3 + 2 * b * particle.position
+    r12 = different_particle.pos - particle.pos
+    r12_hat = r12 / np.linalg.norm(r12)
+
+    force = 2 * alpha * d_e * (1 - math.exp(-alpha(r12 - r_e))) * math.exp(-alpha(r12 - r_e)) * r12_hat
     return force
 
 
-def pot_energy_dw(particle, a, b):
+def morse_potential(particle, different_particle, r_e, alpha, d_e):
     """
-    Method to return potential energy 
-    of particle in double-well potential
-    V(x) = a*x^4 - b*x^2
+    Method to return Morse Potential
+    of particle in double-well potential using Morse Potential
+    U(r1, r2) = d_e * ((1 - exp(-alpha(r12 - r_e))) ** 2) - 1)
 
-    :param particle: Particle1D instance
-    :param a: parameter a from potential
-    :param b: parameter b from potential
-    :return: potential energy of particle as float
+    :param particle: Particle3D instance
+    :param different_particle: Particle3D instance
+    :param r_e: parameter r_e, controls position of the potential minimum
+    :param alpha: parameter alpha, controls depth of the potential minimum
+    :param d_e: parameter d_e, controls curvature of the potential minimum
+
+    :return: Morse Potential of particle as float
     """
-    potential = a * particle.position ** 4 - b * particle.position ** 2
+    r12 = different_particle.pos - particle.pos
+
+    potential = d_e * (((1 - math.exp(-alpha(r12 - r_e))) ** 2) - 1)
     return potential
 
 
