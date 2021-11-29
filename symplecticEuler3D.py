@@ -19,7 +19,7 @@ import matplotlib.pyplot as pyplot
 from particle3D import Particle3D
 
 
-def morse_force(particle, different_particle, r_e, alpha, d_e):
+def morse_force(particle, different_particle, r_e, d_e, alpha):
     """
     Method to return the force on a particle
     in a double well potential using Morse Potential.
@@ -29,8 +29,9 @@ def morse_force(particle, different_particle, r_e, alpha, d_e):
     :param particle: Particle3D instance
     :param different_particle: Particle3D instance
     :param r_e: parameter r_e, controls position of the potential minimum
-    :param alpha: parameter alpha, controls depth of the potential minimum
     :param d_e: parameter d_e, controls curvature of the potential minimum
+    :param alpha: parameter alpha, controls depth of the potential minimum
+
     :return: force acting on particle as Numpy array
     """
     r12 = different_particle.pos - particle.pos
@@ -39,7 +40,7 @@ def morse_force(particle, different_particle, r_e, alpha, d_e):
     return force
 
 
-def morse_potential(particle, different_particle, r_e, alpha, d_e):
+def morse_potential(particle, different_particle, r_e, d_e, alpha):
     """
     Method to return Morse Potential
     of particle in double-well potential using Morse Potential
@@ -48,8 +49,8 @@ def morse_potential(particle, different_particle, r_e, alpha, d_e):
     :param particle: Particle3D instance
     :param different_particle: Particle3D instance
     :param r_e: parameter r_e, controls position of the potential minimum
-    :param alpha: parameter alpha, controls depth of the potential minimum
     :param d_e: parameter d_e, controls curvature of the potential minimum
+    :param alpha: parameter alpha, controls depth of the potential minimum
 
     :return: Morse Potential of particle as float
     """
@@ -73,46 +74,48 @@ def main():
 
     # Set up simulation parameters
     dt = 0.01
-    numstep = 2000
+    numstep = 10000
     time = 0.0
-    a = 0.1
-    b = 1.0
+    r_e = 1.20752
+    d_e = 5.21322
+    alpha = 2.65374
 
     # Set up particle initial conditions:
     #  position x0 = 0.0
     #  velocity v0 = 1.0
     #  mass      m = 1.0
-    p1 = Particle3D(0.0, 1.0, 1.0)
+    p1 = Particle3D('Oxygen', 16, [0.65661, 0, 0], [0.05, 0, 0])
+    p2 = Particle3D('Oxygen', 16, [-0.65661, 0, 0], [-0.05, 0, 0])
 
     # Write out initial conditions
-    energy = p1.kinetic_energy() + pot_energy_dw(p1, a, b)
-    outfile.write("{0:f} {1:f} {2:12.8f}\n".format(time, p1.position, energy))
+    energy = p1.kinetic_e() + morse_potential(p1, p2, r_e, alpha, d_e)
+    outfile.write("{0:f} {1:f} {2:12.8f}\n".format(time, p1.pos, energy))
 
     # Initialise data lists for plotting later
     time_list = [time]
-    pos_list = [p1.position]
+    pos_list = [p1.pos]
     energy_list = [energy]
 
     # Start the time integration loop
     for i in range(numstep):
         # Update particle position
-        p1.leap_pos1st(dt)
+        p1.update_pos(dt)
 
         # Calculate force
-        force = force_dw(p1, a, b)
+        force = morse_force(p1, p2, r_e, d_e, alpha)
         # Update particle velocity 
-        p1.leap_velocity(dt, force)
+        p1.update_vel(dt, force)
 
         # Increase time
         time += dt
 
         # Output particle information
-        energy = p1.kinetic_energy() + pot_energy_dw(p1, a, b)
-        outfile.write("{0:f} {1:f} {2:12.8f}\n".format(time, p1.position, energy))
+        energy = p1.kinetic_e() + morse_potential(p1, p2, r_e, alpha, d_e)
+        outfile.write("{0:f} {1:f} {2:12.8f}\n".format(time, p1.pos, energy))
 
         # Append information to data lists
         time_list.append(time)
-        pos_list.append(p1.position)
+        pos_list.append(p1.pos)
         energy_list.append(energy)
 
     # Post-simulation:
