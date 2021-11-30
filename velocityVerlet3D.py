@@ -96,7 +96,8 @@ def main():
     outfile.write("{0:f} {1:f} {2:12.8f}\n".format(time, p1_to_p2, energy))
 
     # Get initial force
-    force = morse_force(p1, p2, r_e, d_e, alpha)
+    force1 = morse_force(p1, p2, r_e, d_e, alpha)
+    force2 = - force1
 
     # Initialise data lists for plotting later
     time_list = [time]
@@ -108,19 +109,21 @@ def main():
     # Start the time integration loop
     for i in range(numstep):
         # Update particle position
-        p1.update_pos_2nd(dt, force)
-        p2.update_pos_2nd(dt, force)
+        p1.update_pos_2nd(dt, force1)
+        p2.update_pos_2nd(dt, force2)
         p1_to_p2 = np.linalg.norm(p2.pos - p1.pos)
         
         # Update force
-        force_new = morse_force(p1, p2, r_e, d_e, alpha)
+        force1_new = morse_force(p1, p2, r_e, d_e, alpha)
+        force2_new = - force1_new
         # Update particle velocity by averaging
         # current and new forces
-        p1.update_vel(dt, 0.5*(force + force_new))
-        p2.update_vel(dt, 0.5*(force - force_new))
+        p1.update_vel(dt, 0.5*(force1 + force1_new))
+        p2.update_vel(dt, 0.5*(force2 + force2_new))
         
         # Re-define force value
-        force = force_new
+        force1 = force1_new
+        force2 = force2_new
 
         # Increase time
         time += dt
@@ -149,7 +152,7 @@ def main():
     pyplot.show()
 
     # Plot particle energy to screen
-    pyplot.title('Velocity Verlet: Total energy vs Time')
+    pyplot.title('Velocity Verlet: Total Energy vs Time')
     pyplot.xlabel('Time')
     pyplot.ylabel('Energy')
     pyplot.plot(time_list, energy_list)
