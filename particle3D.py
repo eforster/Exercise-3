@@ -13,7 +13,7 @@ import math
 import numpy as np
 
 
-class Particle3D(object):
+class Particle3D(object) :
     """
     Class to describe point-particles in 3D space
 
@@ -38,7 +38,7 @@ class Particle3D(object):
     com_vel - computes total mass and CoM velocity of a p3d list
     """
 
-    def __init__(self, label, mass, pos, vel):
+    def __init__(self, label, mass, pos, vel) :
         """
         Initialises a particle in 3D space
 
@@ -53,7 +53,7 @@ class Particle3D(object):
         self.vel = vel
 
 
-    def __str__(self):
+    def __str__(self) :
         """
         XYZ-compliant string. The format is
         <label>    <x>  <y>  <z>
@@ -64,7 +64,7 @@ class Particle3D(object):
         return xyz_string
 
 
-    def kinetic_e(self):
+    def kinetic_e(self) :
         """
         Returns the kinetic energy of a Particle3D instance
 
@@ -74,7 +74,7 @@ class Particle3D(object):
         return ke
 
 
-    def momentum(self):
+    def momentum(self) :
         """
         Calculates and returns the momentum of a Particle3D instance
 
@@ -84,7 +84,7 @@ class Particle3D(object):
         return p
 
 
-    def update_pos(self, dt):
+    def update_pos(self, dt) :
         """
         Calculates and updates the new position of a Particle3D instance to 1st order
 
@@ -93,7 +93,7 @@ class Particle3D(object):
         self.pos = self.pos + dt * self.vel
 
 
-    def update_pos_2nd(self, dt, force):
+    def update_pos_2nd(self, dt, force) :
         """
         Calculates and updates the position of a Particle3D instance to 2nd order
 
@@ -103,7 +103,7 @@ class Particle3D(object):
         self.pos = self.pos + dt * self.vel + (dt ** 2) * (force/(2 * self.mass))
 
 
-    def update_vel(self, dt, force):
+    def update_vel(self, dt, force) :
         """
         Updates the velocity of a Particle3D instance to 1st order
 
@@ -114,7 +114,7 @@ class Particle3D(object):
 
 
     @staticmethod
-    def new_p3d(input_file):
+    def new_p3d(input_file) :
         """
         Initialises a Particle3D instance when given an input file handle.
         
@@ -125,7 +125,7 @@ class Particle3D(object):
 
         :return Particle3D: instance label mass position velocity
         """
-        try:
+        try :
 
             data = input_file.readline()
             lines = data.split()
@@ -145,13 +145,13 @@ class Particle3D(object):
 
             return Particle3D(label, mass, pos, vel)
 
-        except IndexError:
+        except IndexError :
 
             print("Error: Incorrect file format.")
 
 
     @staticmethod
-    def sys_kinetic(p3d_list):
+    def sys_kinetic(p3d_list) :
         """
         Returns the total kinetic energy of the system as a float
 
@@ -162,7 +162,7 @@ class Particle3D(object):
 
         sys_ke = 0
 
-        for particle in p3d_list:
+        for particle in p3d_list :
 
             ke = particle.kinetic_e()
             sys_ke += ke
@@ -171,7 +171,7 @@ class Particle3D(object):
 
 
     @staticmethod
-    def com_velocity(p3d_list):
+    def com_velocity(p3d_list) :
         """
         Computes the total mass and CoM velocity of a list of P3D's
 
@@ -184,7 +184,7 @@ class Particle3D(object):
         com_vel = 0
         total = 0
 
-        for particle in p3d_list:
+        for particle in p3d_list :
 
             particle_mass = particle.mass
             total_mass += particle_mass

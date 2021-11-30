@@ -18,7 +18,7 @@ import numpy as np
 import matplotlib.pyplot as pyplot
 from particle3D import Particle3D
 
-def morse_force(particle, different_particle, r_e, d_e, alpha):
+def morse_force(particle, different_particle, r_e, d_e, alpha) :
     """
     Method to return the force on a particle
     in a double well potential using Morse Potential.
@@ -40,7 +40,7 @@ def morse_force(particle, different_particle, r_e, d_e, alpha):
     return force
 
 
-def morse_potential(particle, different_particle, r_e, d_e, alpha):
+def morse_potential(particle, different_particle, r_e, d_e, alpha) :
     """
     Method to return Morse Potential
     of particle in double-well potential using Morse Potential
@@ -62,13 +62,13 @@ def morse_potential(particle, different_particle, r_e, d_e, alpha):
 
 
 # Begin main code
-def main():
+def main() :
     # Read name of output file from command line
-    if len(sys.argv)!=2:
+    if len(sys.argv) != 2 :
         print("Wrong number of arguments.")
         print("Usage: " + sys.argv[0] + " <output file>")
         quit()
-    else:
+    else :
         outfile_name = sys.argv[1]
 
     # Open output file
@@ -107,7 +107,7 @@ def main():
     energy_list = [energy]
 
     # Start the time integration loop
-    for i in range(numstep):
+    for i in range(numstep) :
         # Update particle position
         p1.update_pos_2nd(dt, force1)
         p2.update_pos_2nd(dt, force2)
@@ -144,22 +144,22 @@ def main():
     outfile.close()
 
     # Plot particle trajectory to screen
-    pyplot.title('Velocity Verlet: Position vs Time')
-    pyplot.xlabel('Time')
-    pyplot.ylabel('Position')
+    pyplot.title('Velocity Verlet : Position vs Time')
+    pyplot.xlabel('Time : ')
+    pyplot.ylabel('Position : ')
     pyplot.plot(time_list, pos1_list)
     pyplot.plot(time_list, pos2_list)
     pyplot.show()
 
     # Plot particle energy to screen
-    pyplot.title('Velocity Verlet: Total Energy vs Time')
-    pyplot.xlabel('Time')
-    pyplot.ylabel('Energy')
+    pyplot.title('Velocity Verlet : Total Energy vs Time')
+    pyplot.xlabel('Time : ')
+    pyplot.ylabel('Energy : ')
     pyplot.plot(time_list, energy_list)
     pyplot.show()
 
 
 # Execute main method, but only when directly invoked
-if __name__ == "__main__":
+if __name__ == "__main__" :
     main()
 
