@@ -63,31 +63,67 @@ def morse_potential(particle, different_particle, r_e, d_e, alpha) :
 
 # Begin main code
 def main() :
-    # Read name of output file from command line
-    if len(sys.argv) != 2 :
-        print("Wrong number of arguments.")
-        print("Usage: " + sys.argv[0] + " <output file>")
-        quit()
-    else :
-        outfile_name = sys.argv[1]
 
-    # Open output file
-    outfile = open(outfile_name, "w")
+    with open(sys.argv[1], "r") as infile :
 
-    # Set up simulation parameters
-    dt = 0.01
-    numstep = 10000
+        # Read name of output file from command line
+        if len(sys.argv) != 3 :
+
+            print("Wrong number of arguments.")
+            print("Usage: " + sys.argv[0] + "<input file>" + "<output file>")
+            quit()
+        else :
+            outfile_name = sys.argv[2]
+
+            # Open output file
+            outfile = open(outfile_name, "w")
+
+            line1 = infile.readline()
+            line2 = infile.readline()
+            line2 = line2.split()
+
+            if len(line2) != 2 :
+                print("Wrong number of arguments in line 2 of input data file, i.e. simulation parameters. ")
+
+            else :
+                dt = float(line2[0])
+                numstep = int(line2[1])
+
+            line3 = infile.readline()
+            line4 = infile.readline()
+            line4 = line4.split()
+
+            if len(line4) != 3 :
+                print("Wrong number of arguments in line 4 of input data file, i.e. Morse potential parameters. ")
+
+            else :
+                d_e = float(line4[0])
+                r_e = float(line4[1])
+                alpha = float(line4[2])
+
+            line5 = infile.readline()
+            line5 = line5.split()
+            line6 = infile.readline()
+            line6 = line6.split()
+
+            if len(line5) and len(line6) != 8 :
+                print("Wrong number of arguments in line 5 and 6, i.e. initial conditions of particles. ")
+
+            else :
+
+                pos1 = np.array([float(line5[2]), float(line5[3]), float(line5[4])])
+                vel1 = np.array([float(line5[5]), float(line5[6]), float(line5[7])])
+
+                p1 = Particle3D(str(line5[0]), float(line5[1]), pos1, vel1)
+
+                pos2 = np.array([float(line6[2]), float(line6[3]), float(line6[4])])
+                vel2 = np.array([float(line6[5]), float(line6[6]), float(line6[7])])
+
+                p2 = Particle3D(str(line6[0]), float(line6[1]), pos2, vel2)
+
+    infile.close()
+
     time = 0.0
-    r_e = 1.20752
-    d_e = 5.21322
-    alpha = 2.65374
-
-    # Set up particle initial conditions:
-    #  position x0 = 0.0
-    #  velocity v0 = 1.0
-    #  mass      m = 1.0
-    p1 = Particle3D('Oxygen', 16, np.array([0.65661, 0, 0]), np.array([0.05, 0, 0]))
-    p2 = Particle3D('Oxygen', 16, np.array([-0.65661, 0, 0]), np.array([-0.05, 0, 0]))
     p1_to_p2 = np.linalg.norm(p2.pos - p1.pos)
 
 
@@ -162,4 +198,3 @@ def main() :
 # Execute main method, but only when directly invoked
 if __name__ == "__main__" :
     main()
-
