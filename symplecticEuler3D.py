@@ -16,6 +16,7 @@ import sys
 import math
 import numpy as np
 import matplotlib.pyplot as pyplot
+import scipy.signal
 from particle3D import Particle3D
 
 
@@ -59,6 +60,23 @@ def morse_potential(particle, different_particle, r_e, d_e, alpha) :
     mag_r12 = np.linalg.norm(r12)
     potential = d_e * (((1 - math.exp(-alpha * (mag_r12 - r_e))) ** 2) - 1)
     return potential
+
+def oscillations(pos_list, dt) :
+
+    peaks = scipy.signal.find_peaks(pos_list)
+
+    initial = peaks[0]
+    final = peaks[-1]
+    p1_to_p2_list = pos_list[initial : final]
+
+    num_peaks = len(peaks)
+    time_elapsed = len(pos_list) * dt
+
+    period = time_elapsed / num_peaks
+    period_in_seconds = period * 1.1018050571e-14
+
+    wave_number = ((1 / period_in_seconds) * 299792458) / 100
+    return wave_number
 
 
 # Begin main code
@@ -164,6 +182,7 @@ def main() :
         time_list.append(time)
         pos1_list.append(p1.pos)
         pos2_list.append(p2.pos)
+        pos_list.append(p1_to_p2)
         energy_list.append(energy)
 
     # Post-simulation:
@@ -185,6 +204,7 @@ def main() :
     pyplot.plot(time_list, energy_list)
     pyplot.show()
 
+    print("Wavenumber : ", oscillations(pos_list, dt), "cm ^ -1 .")
 
 # Execute main method, but only when directly invoked
 if __name__ == "__main__" :
