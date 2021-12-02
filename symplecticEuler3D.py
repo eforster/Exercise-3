@@ -16,7 +16,7 @@ import sys
 import math
 import numpy as np
 import matplotlib.pyplot as pyplot
-import scipy.signal
+from scipy.signal import find_peaks
 from particle3D import Particle3D
 
 
@@ -63,19 +63,25 @@ def morse_potential(particle, different_particle, r_e, d_e, alpha) :
 
 def oscillations(pos_list, dt) :
 
-    peaks = scipy.signal.find_peaks(pos_list)
+    wave_peaks = find_peaks(pos_list)
+    peak_pos = pos_list[wave_peaks[0]]
 
-    initial = peaks[0]
-    final = peaks[-1]
-    p1_to_p2_list = pos_list[initial : final]
+    first_peak = peak_pos[0]
+    last_peak = peak_pos[-1]
 
-    num_peaks = len(peaks)
-    time_elapsed = len(pos_list) * dt
+    pos_list = pos_list[first_peak : last_peak]
 
-    period = time_elapsed / num_peaks
-    period_in_seconds = period * 1.1018050571e-14
+    num_peaks = len(peak_pos)
+    total_time = dt * len(pos_list)
 
-    wave_number = ((1 / period_in_seconds) * 299792458) / 100
+    period = total_time / num_peaks
+    period_in_seconds = period * 1.018050571e-14
+
+    frequency = 1 / period_in_seconds       # Hz
+    speed_of_light = 299792458              # m/s
+    wavelength = (speed_of_light / frequency) / 100         # converts to cm
+
+    wave_number = 1 / wavelength
     return wave_number
 
 
