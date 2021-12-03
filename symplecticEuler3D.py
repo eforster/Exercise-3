@@ -105,7 +105,7 @@ def main() :
     4.) Starts a time integration loop
     5.) Plots particle trajectory to screen
     6.) Plots particle energy to screen
-    7.) Measures the frequency of oscillations and prints the wave-number to screen
+    7.) Measures the frequency of oscillations and prints the wave-number and it's inaccuracy to screen
     8.) Measures the energy inaccuracy of the simulation and prints it to the screen
 
     """
@@ -243,9 +243,14 @@ def main() :
     pyplot.plot(time_list, energy_list)
     pyplot.show()
 
-    # Part 7.) Measures the frequency of oscillations and prints the wave-number to screen
+    # Part 7.) Measures the frequency of oscillations and prints the wave-number and it's inaccuracy to screen
 
-    print("Wave-number :", oscillations(pos_list, dt), "cm ^ -1 .")
+    wave_number = oscillations(pos_list, dt)
+    print("Wave-number :", wave_number, "cm ^ -1 .")
+    v_nought = oscillations(pos_list, 10 ** (-5))
+    delta_v = wave_number - v_nought
+    wave_number_inaccuracy = delta_v / v_nought
+    print("Wave-number inaccuracy :", wave_number_inaccuracy, "cm ^ -1 .")
 
     # Part 8.) Measures the energy inaccuracy of the simulation and prints it to the screen
 
@@ -254,9 +259,9 @@ def main() :
     min_energy = min(energy_list)
 
     delta_energy = max_energy - min_energy
-    inaccuracy = delta_energy / initial_energy
+    energy_inaccuracy = delta_energy / initial_energy
 
-    print("Energy inaccuracy : +/- ", inaccuracy, "eV ")
+    print("Energy inaccuracy : +/- ", energy_inaccuracy, "eV ")
 
 
 # Execute main method, but only when directly invoked
