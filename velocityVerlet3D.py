@@ -6,8 +6,8 @@ Produces plots of the position of the particle
 and its energy, both as function of time. Also
 saves both to file.
 
-The potential is V(x) = a*x^4 - b*x^2, where
-a and b are hard-coded in the main() method
+The potential is U(r1, r2) = d_e * ((1 - exp(-alpha(r12 - r_e))) ** 2) - 1)
+where the parameters are read in from a data file
 and passed to the functions that
 calculate force and potential energy.
 """
@@ -61,7 +61,18 @@ def morse_potential(particle, different_particle, r_e, d_e, alpha) :
     return potential
 
 def oscillations(pos_list, dt) :
+    """
+    Method to calculate the period of the oscillating particle
+    and then obtain the wave-number.
 
+    wave-number = 1 / wavelength
+
+    :param pos_list: position list along the time-axis
+    :param dt: time-step for simulation
+
+    :return: wave_number
+
+    """
 
     wave_peaks = find_peaks(pos_list)
     print(wave_peaks[0])
