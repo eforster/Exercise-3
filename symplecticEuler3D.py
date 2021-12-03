@@ -64,17 +64,13 @@ def morse_potential(particle, different_particle, r_e, d_e, alpha) :
 def oscillations(pos_list, dt) :
 
     wave_peaks = find_peaks(pos_list)
-    peak_pos = pos_list[wave_peaks[0]]
+    print(wave_peaks[0])
+    peak_pos = [wave_peaks[0]]
 
     first_peak = peak_pos[0]
-    last_peak = peak_pos[-1]
+    last_peak = peak_pos[1]
 
-    pos_list = pos_list[first_peak : last_peak]
-
-    num_peaks = len(peak_pos)
-    total_time = dt * len(pos_list)
-
-    period = total_time / num_peaks
+    period = peak_pos[first_peak : last_peak]
     period_in_seconds = period * 1.018050571e-14
 
     frequency = 1 / period_in_seconds       # Hz
