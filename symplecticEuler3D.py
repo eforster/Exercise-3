@@ -247,10 +247,10 @@ def main() :
 
     wave_number = oscillations(pos_list, dt)
     print("Wave-number :", wave_number, "cm ^ -1 .")
-    v_nought = oscillations(pos_list, 10 ** (-5))
+    v_nought = 1525.5847124925656
     delta_v = wave_number - v_nought
     wave_number_inaccuracy = delta_v / v_nought
-    print("Wave-number inaccuracy :", wave_number_inaccuracy, "cm ^ -1 .")
+    print("Wave-number inaccuracy : +/-", wave_number_inaccuracy, "cm ^ -1 .")
 
     # Part 8.) Measures the energy inaccuracy of the simulation and prints it to the screen
 
@@ -261,7 +261,7 @@ def main() :
     delta_energy = max_energy - min_energy
     energy_inaccuracy = delta_energy / initial_energy
 
-    print("Energy inaccuracy : +/- ", energy_inaccuracy, "eV ")
+    print("Energy inaccuracy : +/-", energy_inaccuracy, "eV ")
 
 
 # Execute main method, but only when directly invoked
